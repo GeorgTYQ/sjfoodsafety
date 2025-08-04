@@ -60,7 +60,7 @@ export default function FridgeTempForm() {
       }
     }
     fetchRecentRecord();
-  }, []);
+  }, [userId]);
 
   // Load recent record into form for editing
   const handleLoadRecentRecord = () => {
