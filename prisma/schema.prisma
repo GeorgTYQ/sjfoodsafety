@@ -1,0 +1,38 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id      Int      @id @default(autoincrement())
+  name    String
+  records Record[] // 用户提交的记录
+}
+
+model Fridge {
+  id       Int                 @id @default(autoincrement())
+  name     String
+  readings FridgeTemperature[] // 每个冰箱的温度记录
+}
+
+model Record {
+  id         Int                 @id @default(autoincrement())
+  user       User                @relation(fields: [userId], references: [id])
+  userId     Int
+  recordedAt DateTime            @default(now())
+  readings   FridgeTemperature[] // 此次记录下所有冰箱的温度
+}
+
+model FridgeTemperature {
+  id          Int    @id @default(autoincrement())
+  record      Record @relation(fields: [recordId], references: [id], onDelete: Cascade)
+  recordId    Int
+  fridge      Fridge @relation(fields: [fridgeId], references: [id])
+  fridgeId    Int
+  temperature Float  @default(0.0)
+}
